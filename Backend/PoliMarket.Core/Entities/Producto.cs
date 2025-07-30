@@ -30,7 +30,7 @@ namespace PoliMarket.Core.Entities
         [Required]
         public int StockDisponible { get; set; } = 0;
 
-        public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
+        public DateTime FechaCreacion { get; set; } 
 
         public bool Activo { get; set; } = true;
 

@@ -11,7 +11,7 @@ namespace PoliMarket.Core.Entities
         [Required]
         public int CodigoCliente { get; set; }
 
-        public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
+        public DateTime FechaRegistro { get; set; } 
 
         // Relaciones según diagrama UML
         public virtual ICollection<Venta> Ventas { get; set; } = new List<Venta>();

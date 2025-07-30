@@ -25,7 +25,7 @@ namespace PoliMarket.Core.Entities
         [StringLength(50)]
         public string Identificacion { get; set; } = string.Empty;
 
-        public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
+        public DateTime FechaCreacion { get; set; } 
 
         public bool Activo { get; set; } = true;
 

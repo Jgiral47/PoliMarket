@@ -22,7 +22,7 @@ namespace PoliMarket.Core.Entities
         [Required]
         public int IdCliente { get; set; }
 
-        public DateTime FechaVenta { get; set; } = DateTime.UtcNow;
+        public DateTime FechaVenta { get; set; } 
 
         [Required]
         [StringLength(50)]

@@ -196,51 +196,241 @@ namespace PoliMarket.DataAccess.Context
 
         /// <summary>
         /// Configura datos semilla para desarrollo y pruebas
+        /// IMPORTANTE: Usar fechas fijas para evitar problemas con migrations
         /// </summary>
         private void ConfigurarDatosSemilla(ModelBuilder modelBuilder)
         {
+            // Fechas fijas para evitar problemas con migrations
+            var fechaAutorizacion = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var fechaVigencia = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var fechaCreacion = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
             // Proveedores semilla
             modelBuilder.Entity<Proveedor>().HasData(
-                new Proveedor { Id = 1, IdProveedor = 1001, Nombre = "Proveedor Tech Solutions", Telefono = "555-0001", Correo = "contacto@techsolutions.com" },
-                new Proveedor { Id = 2, IdProveedor = 1002, Nombre = "Distribuidora Nacional", Telefono = "555-0002", Correo = "ventas@disnacional.com" }
+                new Proveedor
+                {
+                    Id = 1,
+                    IdProveedor = 1001,
+                    Nombre = "Proveedor Tech Solutions",
+                    Telefono = "555-0001",
+                    Correo = "contacto@techsolutions.com",
+                    Activo = true
+                },
+                new Proveedor
+                {
+                    Id = 2,
+                    IdProveedor = 1002,
+                    Nombre = "Distribuidora Nacional",
+                    Telefono = "555-0002",
+                    Correo = "ventas@disnacional.com",
+                    Activo = true
+                }
             );
 
             // Productos semilla
             modelBuilder.Entity<Producto>().HasData(
-                new Producto { Id = 1, IdProducto = 2001, Nombre = "Laptop Dell Inspiron", Precio = 2500000, Descripcion = "Laptop para uso profesional", StockDisponible = 15 },
-                new Producto { Id = 2, IdProducto = 2002, Nombre = "Mouse Inalámbrico", Precio = 85000, Descripcion = "Mouse ergonómico inalámbrico", StockDisponible = 50 },
-                new Producto { Id = 3, IdProducto = 2003, Nombre = "Teclado Mecánico", Precio = 320000, Descripcion = "Teclado mecánico RGB", StockDisponible = 25 },
-                new Producto { Id = 4, IdProducto = 2004, Nombre = "Monitor 24 pulgadas", Precio = 890000, Descripcion = "Monitor Full HD IPS", StockDisponible = 8 },
-                new Producto { Id = 5, IdProducto = 2005, Nombre = "Disco SSD 1TB", Precio = 450000, Descripcion = "Disco sólido de alta velocidad", StockDisponible = 30 }
+                new Producto
+                {
+                    Id = 1,
+                    IdProducto = 2001,
+                    Nombre = "Laptop Dell Inspiron",
+                    Precio = 2500000,
+                    Descripcion = "Laptop para uso profesional",
+                    StockDisponible = 15,
+                    Activo = true,
+                    FechaCreacion = fechaCreacion
+                },
+                new Producto
+                {
+                    Id = 2,
+                    IdProducto = 2002,
+                    Nombre = "Mouse Inalámbrico",
+                    Precio = 85000,
+                    Descripcion = "Mouse ergonómico inalámbrico",
+                    StockDisponible = 50,
+                    Activo = true,
+                    FechaCreacion = fechaCreacion
+                },
+                new Producto
+                {
+                    Id = 3,
+                    IdProducto = 2003,
+                    Nombre = "Teclado Mecánico",
+                    Precio = 320000,
+                    Descripcion = "Teclado mecánico RGB",
+                    StockDisponible = 25,
+                    Activo = true,
+                    FechaCreacion = fechaCreacion
+                },
+                new Producto
+                {
+                    Id = 4,
+                    IdProducto = 2004,
+                    Nombre = "Monitor 24 pulgadas",
+                    Precio = 890000,
+                    Descripcion = "Monitor Full HD IPS",
+                    StockDisponible = 8,
+                    Activo = true,
+                    FechaCreacion = fechaCreacion
+                },
+                new Producto
+                {
+                    Id = 5,
+                    IdProducto = 2005,
+                    Nombre = "Disco SSD 1TB",
+                    Precio = 450000,
+                    Descripcion = "Disco sólido de alta velocidad",
+                    StockDisponible = 30,
+                    Activo = true,
+                    FechaCreacion = fechaCreacion
+                }
             );
 
             // Vendedores semilla
             modelBuilder.Entity<Vendedor>().HasData(
-                new Vendedor { Id = 1, IdPersona = 3001, IdVendedor = 4001, Nombre = "Juan Carlos", Apellido = "Pérez", Identificacion = "12345678", EstaAutorizado = true, FechaAutorizacion = DateTime.UtcNow },
-                new Vendedor { Id = 2, IdPersona = 3002, IdVendedor = 4002, Nombre = "María Elena", Apellido = "González", Identificacion = "87654321", EstaAutorizado = true, FechaAutorizacion = DateTime.UtcNow },
-                new Vendedor { Id = 3, IdPersona = 3003, IdVendedor = 4003, Nombre = "Carlos Alberto", Apellido = "Rodríguez", Identificacion = "11223344", EstaAutorizado = false }
+                new Vendedor
+                {
+                    Id = 1,
+                    IdPersona = 3001,
+                    IdVendedor = 4001,
+                    Nombre = "Juan Carlos",
+                    Apellido = "Pérez",
+                    Identificacion = "12345678",
+                    EstaAutorizado = true,
+                    FechaAutorizacion = fechaAutorizacion,
+                    Activo = true,
+                    FechaCreacion = fechaCreacion
+                },
+                new Vendedor
+                {
+                    Id = 2,
+                    IdPersona = 3002,
+                    IdVendedor = 4002,
+                    Nombre = "María Elena",
+                    Apellido = "González",
+                    Identificacion = "87654321",
+                    EstaAutorizado = true,
+                    FechaAutorizacion = fechaAutorizacion,
+                    Activo = true,
+                    FechaCreacion = fechaCreacion
+                },
+                new Vendedor
+                {
+                    Id = 3,
+                    IdPersona = 3003,
+                    IdVendedor = 4003,
+                    Nombre = "Carlos Alberto",
+                    Apellido = "Rodríguez",
+                    Identificacion = "11223344",
+                    EstaAutorizado = false,
+                    Activo = true,
+                    FechaCreacion = fechaCreacion
+                }
             );
 
             // Clientes semilla
             modelBuilder.Entity<Cliente>().HasData(
-                new Cliente { Id = 4, IdPersona = 3004, CodigoCliente = 5001, Nombre = "Ana Sofía", Apellido = "Martínez", Identificacion = "99887766" },
-                new Cliente { Id = 5, IdPersona = 3005, CodigoCliente = 5002, Nombre = "Roberto", Apellido = "Jiménez", Identificacion = "55443322" },
-                new Cliente { Id = 6, IdPersona = 3006, CodigoCliente = 5003, Nombre = "Lucía", Apellido = "Fernández", Identificacion = "66778899" }
+                new Cliente
+                {
+                    Id = 4,
+                    IdPersona = 3004,
+                    CodigoCliente = 5001,
+                    Nombre = "Ana Sofía",
+                    Apellido = "Martínez",
+                    Identificacion = "99887766",
+                    Activo = true,
+                    FechaCreacion = fechaCreacion
+                },
+                new Cliente
+                {
+                    Id = 5,
+                    IdPersona = 3005,
+                    CodigoCliente = 5002,
+                    Nombre = "Roberto",
+                    Apellido = "Jiménez",
+                    Identificacion = "55443322",
+                    Activo = true,
+                    FechaCreacion = fechaCreacion
+                },
+                new Cliente
+                {
+                    Id = 6,
+                    IdPersona = 3006,
+                    CodigoCliente = 5003,
+                    Nombre = "Lucía",
+                    Apellido = "Fernández",
+                    Identificacion = "66778899",
+                    Activo = true,
+                    FechaCreacion = fechaCreacion
+                }
             );
 
             // Autorizaciones semilla
             modelBuilder.Entity<Autorizacion>().HasData(
-                new Autorizacion { Id = 1, IdAutorizacion = 6001, IdVendedor = 1, Tipo = "Venta", FechaVigencia = DateTime.UtcNow.AddYears(1), EsVigente = true },
-                new Autorizacion { Id = 2, IdAutorizacion = 6002, IdVendedor = 2, Tipo = "Venta", FechaVigencia = DateTime.UtcNow.AddYears(1), EsVigente = true }
+                new Autorizacion
+                {
+                    Id = 1,
+                    IdAutorizacion = 6001,
+                    IdVendedor = 1,
+                    Tipo = "Venta",
+                    FechaVigencia = fechaVigencia,
+                    EsVigente = true,
+                    FechaCreacion = fechaCreacion
+                },
+                new Autorizacion
+                {
+                    Id = 2,
+                    IdAutorizacion = 6002,
+                    IdVendedor = 2,
+                    Tipo = "Venta",
+                    FechaVigencia = fechaVigencia,
+                    EsVigente = true,
+                    FechaCreacion = fechaCreacion
+                }
             );
 
             // Relaciones Proveedor-Producto semilla
             modelBuilder.Entity<ProveedorProducto>().HasData(
-                new ProveedorProducto { Id = 1, IdProveedor = 1, IdProducto = 1, Activo = true },
-                new ProveedorProducto { Id = 2, IdProveedor = 1, IdProducto = 4, Activo = true },
-                new ProveedorProducto { Id = 3, IdProveedor = 2, IdProducto = 2, Activo = true },
-                new ProveedorProducto { Id = 4, IdProveedor = 2, IdProducto = 3, Activo = true },
-                new ProveedorProducto { Id = 5, IdProveedor = 2, IdProducto = 5, Activo = true }
+                new ProveedorProducto
+                {
+                    Id = 1,
+                    IdProveedor = 1,
+                    IdProducto = 1,
+                    Activo = true,
+                    FechaInicio = fechaCreacion
+                },
+                new ProveedorProducto
+                {
+                    Id = 2,
+                    IdProveedor = 1,
+                    IdProducto = 4,
+                    Activo = true,
+                    FechaInicio = fechaCreacion
+                },
+                new ProveedorProducto
+                {
+                    Id = 3,
+                    IdProveedor = 2,
+                    IdProducto = 2,
+                    Activo = true,
+                    FechaInicio = fechaCreacion
+                },
+                new ProveedorProducto
+                {
+                    Id = 4,
+                    IdProveedor = 2,
+                    IdProducto = 3,
+                    Activo = true,
+                    FechaInicio = fechaCreacion
+                },
+                new ProveedorProducto
+                {
+                    Id = 5,
+                    IdProveedor = 2,
+                    IdProducto = 5,
+                    Activo = true,
+                    FechaInicio = fechaCreacion
+                }
             );
         }
     }
