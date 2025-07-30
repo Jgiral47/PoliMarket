@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using PoliMarket.Business.Interfaces;
+using PoliMarket.Business.Contracts;
 using PoliMarket.Business.Services;
 using PoliMarket.DataAccess.Context;
 using PoliMarket.DataAccess.Contracts;
@@ -29,13 +29,11 @@ builder.Services.AddDbContext<PoliMarketDbContext>(options =>
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 // Business Services (Reutilización)
-builder.Services.AddScoped<IVendedorService, VendedorService>();
-builder.Services.AddScoped<IVentaService, VentaService>();
-builder.Services.AddScoped<IClienteService, ClienteService>();
-builder.Services.AddScoped<IProductoService, ProductoService>();
-builder.Services.AddScoped<IStockService, StockService>();
-builder.Services.AddScoped<IProveedorService, ProveedorService>();
-builder.Services.AddScoped<IOrdenEntregaService, OrdenEntregaService>();
+builder.Services.AddScoped<IComponenteCliente, ComponenteCliente>();
+builder.Services.AddScoped<IComponenteProducto, ComponenteProducto>();
+builder.Services.AddScoped<IComponenteStock, ComponenteStock>();
+builder.Services.AddScoped<IComponenteVendedor, ComponenteVendedor>();
+builder.Services.AddScoped<IComponenteVentas, ComponenteVentas>();
 
 // CORS para frontends
 builder.Services.AddCors(options =>

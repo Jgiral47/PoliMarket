@@ -33,3 +33,4 @@ namespace PoliMarket.Core.Entities
         public string NombreCompleto => $"{Nombre} {Apellido}";
     }
 }
+

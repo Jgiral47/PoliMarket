@@ -1,77 +1,160 @@
+// VentasController.cs - RF2 y RF3
 using Microsoft.AspNetCore.Mvc;
-using PoliMarket.API.DTOs.Requests;
-using PoliMarket.Business.Interfaces;
-using PoliMarket.Core.Entities;
+using PoliMarket.Business.Contracts;
+using PoliMarket.Business.DTOs;
 
 namespace PoliMarket.API.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
-    public class VendedorController : BaseController<Vendedor, IVendedorService>
+    public class VentasController : ControllerBase
     {
-        public VendedorController(IVendedorService service) : base(service) { }
+        private readonly IComponenteVentas _componenteVentas;
+        private readonly ILogger<VentasController> _logger;
 
-        protected override object GetEntityId(Vendedor entity)
+        public VentasController(IComponenteVentas componenteVentas, ILogger<VentasController> logger)
         {
-            return entity.Id;
+            _componenteVentas = componenteVentas;
+            _logger = logger;
         }
 
         /// <summary>
-        /// RF1: Autorizar vendedor para operar en el sistema
+        /// RF2: Registrar una nueva venta
         /// </summary>
-        [HttpPost("{id}/autorizar")]
-        public async Task<ActionResult<bool>> AutorizarVendedor(int id, [FromBody] AutorizarVendedorRequest request)
+        [HttpPost]
+        public async Task<IActionResult> RegistrarVenta([FromBody] RegistrarVentaRequest request)
         {
             try
             {
-                var resultado = await _service.AutorizarVendedorAsync(id, request.IdAutorizacion);
-                if (resultado)
-                    return Ok(new { message = "Vendedor autorizado exitosamente", autorizado = true });
+                var venta = await _componenteVentas.RegistrarVentaAsync(
+                    request.IdVendedor,
+                    request.IdCliente,
+                    request.Productos);
 
-                return BadRequest(new { message = "No se pudo autorizar el vendedor" });
+                return Ok(new { success = true, ventaId = venta.IdVenta, mensaje = "Venta registrada exitosamente" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
-        /// <summary>
-        /// Verificar si un vendedor está autorizado
-        /// </summary>
-        [HttpGet("{id}/estado-autorizacion")]
-        public async Task<ActionResult<object>> ObtenerEstadoAutorizacion(int id)
-        {
-            try
-            {
-                var autorizado = await _service.EstaAutorizadoAsync(id);
-                return Ok(new
-                {
-                    vendedorId = id,
-                    autorizado = autorizado,
-                    estado = autorizado ? "AUTORIZADO" : "PENDIENTE"
-                });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
+                _logger.LogError(ex, "Error al registrar venta");
+                return BadRequest(new { success = false, mensaje = ex.Message });
             }
         }
 
         /// <summary>
-        /// Listar clientes disponibles para un vendedor
+        /// RF3: Calcular total de una venta
         /// </summary>
-        [HttpGet("{id}/clientes")]
-        public async Task<ActionResult<List<Cliente>>> ListarClientes(int id)
+        [HttpGet("{ventaId}/total")]
+        public async Task<IActionResult> CalcularTotal(int ventaId)
         {
             try
             {
-                var clientes = await _service.ListarClientesAsync(id);
-                return Ok(clientes);
+                var total = await _componenteVentas.CalcularTotalAsync(ventaId);
+                return Ok(new { ventaId, total });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                _logger.LogError(ex, "Error al calcular total de venta {VentaId}", ventaId);
+                return BadRequest(new { mensaje = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// RF3: Generar factura de una venta
+        /// </summary>
+        [HttpGet("{ventaId}/factura")]
+        public async Task<IActionResult> GenerarFactura(int ventaId)
+        {
+            try
+            {
+                var factura = await _componenteVentas.GenerarFacturaAsync(ventaId);
+                return Ok(factura);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al generar factura de venta {VentaId}", ventaId);
+                return BadRequest(new { mensaje = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// RF3: Agregar producto a venta existente
+        /// </summary>
+        [HttpPost("{ventaId}/productos")]
+        public async Task<IActionResult> AgregarProducto(int ventaId, [FromBody] AgregarProductoRequest request)
+        {
+            try
+            {
+                var resultado = await _componenteVentas.AgregarProductoAsync(ventaId, request.IdProducto, request.Cantidad);
+                return Ok(new { success = resultado, mensaje = resultado ? "Producto agregado" : "Error al agregar producto" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al agregar producto a venta {VentaId}", ventaId);
+                return BadRequest(new { success = false, mensaje = ex.Message });
+            }
+        }
+
+        [HttpGet("vendedor/{vendedorId}")]
+        public async Task<IActionResult> ObtenerVentasPorVendedor(int vendedorId)
+        {
+            try
+            {
+                var ventas = await _componenteVentas.ObtenerVentasPorVendedorAsync(vendedorId);
+                return Ok(ventas);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener ventas del vendedor {VendedorId}", vendedorId);
+                return BadRequest(new { mensaje = ex.Message });
+            }
+        }
+
+        [HttpGet("{ventaId}")]
+        public async Task<IActionResult> ObtenerVentaCompleta(int ventaId)
+        {
+            try
+            {
+                var venta = await _componenteVentas.ObtenerVentaCompletaAsync(ventaId);
+                if (venta == null)
+                    return NotFound(new { mensaje = "Venta no encontrada" });
+
+                return Ok(venta);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener venta {VentaId}", ventaId);
+                return BadRequest(new { mensaje = ex.Message });
+            }
+        }
+
+        [HttpPut("{ventaId}/completar")]
+        public async Task<IActionResult> CompletarVenta(int ventaId)
+        {
+            try
+            {
+                var resultado = await _componenteVentas.CompletarVentaAsync(ventaId);
+                return Ok(new { success = resultado, mensaje = resultado ? "Venta completada" : "Error al completar venta" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al completar venta {VentaId}", ventaId);
+                return BadRequest(new { success = false, mensaje = ex.Message });
             }
         }
     }
+
+    // DTOs para requests
+    public class RegistrarVentaRequest
+    {
+        public int IdVendedor { get; set; }
+        public int IdCliente { get; set; }
+        public List<ProductoVentaDto> Productos { get; set; } = new();
+    }
+
+    public class AgregarProductoRequest
+    {
+        public int IdProducto { get; set; }
+        public int Cantidad { get; set; }
+    }
 }
+

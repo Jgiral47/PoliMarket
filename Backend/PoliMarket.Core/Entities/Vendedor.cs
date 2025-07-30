@@ -1,23 +1,28 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace PoliMarket.Core.Entities
 {
+    /// <summary>
+    /// Entidad Vendedor que hereda de Persona según diagrama UML
+    /// RF1: Autorizar vendedores para operar dentro del sistema
+    /// </summary>
     public class Vendedor : Persona
     {
+        [Required]
+        public int IdVendedor { get; set; }
+
         public bool EstaAutorizado { get; set; } = false;
 
+        public DateTime? FechaAutorizacion { get; set; }
+
         // Relaciones
-        public virtual ICollection<VendedorAutorizacion> Autorizaciones { get; set; } = new List<VendedorAutorizacion>();
+        public virtual ICollection<Autorizacion> Autorizaciones { get; set; } = new List<Autorizacion>();
         public virtual ICollection<Venta> Ventas { get; set; } = new List<Venta>();
 
-        // Métodos reutilizables del componente
-        public bool EstaActivo()
+        // Método de negocio para RF1
+        public bool PuedeVender()
         {
-            return Activo && EstaAutorizado;
-        }
-
-        public List<Cliente> ListarClientes()
-        {
-            // Implementación placeholder - será completada con el repositorio
-            return new List<Cliente>();
+            return EstaAutorizado && Activo;
         }
     }
 }
