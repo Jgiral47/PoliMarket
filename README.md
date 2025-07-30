@@ -137,4 +137,8 @@ Backend/
 - `GET /api/productos/{productoId}` - Obtener producto específico
 - `GET /api/productos/buscar?termino={busqueda}` - Buscar productos
 
+### **Figura 3: Swagger**
+
+![Diagrama de Clases](docs/images/Swagger.jpeg)
+
 _Sistema PoliMarket - Gestión Empresarial Integral_
