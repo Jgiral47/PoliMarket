@@ -1,0 +1,6 @@
+@PoliMarket.API_HostAddress = http://localhost:5191
+
+GET {{PoliMarket.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,44 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build-backend",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["build", "PoliMarket.sln"],
+      "group": "build",
+      "presentation": {
+        "reveal": "silent"
+      }
+    },
+    {
+      "label": "run-backend",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "run",
+        "--project",
+        "Backend/PoliMarket.API/PoliMarket.API.csproj"
+      ],
+      "group": "build"
+    },
+    {
+      "label": "run-angular",
+      "command": "npm",
+      "type": "shell",
+      "args": ["start"],
+      "options": {
+        "cwd": "${workspaceFolder}/Frontend/angular-admin"
+      }
+    },
+    {
+      "label": "run-vue",
+      "command": "npm",
+      "type": "shell",
+      "args": ["run", "dev"],
+      "options": {
+        "cwd": "${workspaceFolder}/Frontend/vue-vendedores"
+      }
+    }
+  ]
+}
